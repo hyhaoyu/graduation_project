@@ -5,73 +5,81 @@
         <div class="avatar-box m-auto">
           <img src="../../assets/images/login-bg.jpg" alt="">
         </div>
-        <div class="input-content px-5 d-flex flex-column justify-content-around">
-          <input type="text" placeholder="请输入用户名" required="required"
-                 class="mx-auto w-100" :class="{tip:showTip1}"
-                 v-model="username"/>
-          <input type="password" placeholder="请输入密码"
-                 minlength="8" maxlength="16" required="required"
-                 class="mx-auto w-100" :class="{tip:showTip2}"
-                 v-model="password" @keyup.enter="login"/>
-          <button class="confirm-btn" @click="login">登录</button>
-          <div class="go-register mx-auto w-100 text-center ">
-            <span class="">没账号？去注册</span>
-            <span class="float-right" @click="getData">重置</span>
+        <b-form class="form-content px-5"
+                @submit="login" v-if="show">
+          <b-form-group id="input-group-1"
+                        label="用户名" label-for="input-1">
+            <b-form-input id="input-1" v-model="form.username"
+                          placeholder="请输入用户名"
+                          size="sm" autocomplete="off"
+                          required>
+            </b-form-input>
+          </b-form-group>
+
+          <b-form-group id="input-group-2" label="密码" label-for="input-2">
+            <b-form-input id="input-2" type="password"
+                          v-model="form.password"
+                          placeholder="请输入密码"
+                          minlength="8" maxlength="20"
+                          size="sm" required>
+            </b-form-input>
+          </b-form-group>
+          <b-button class="login-btn w-100" type="submit" pill>
+            登录
+          </b-button>
+          <div class="go-register" align="center">
+            <span class="" v-b-modal.modal v-show="role != 'admin'">没账号？去注册</span>
+            <span class="float-right" @click="resetForm">重置</span>
           </div>
-        </div>
+        </b-form>
         <select class="select-btn" v-model="role">
-          <option value="user">学生</option>
+          <option value="student">学生</option>
           <option value="teacher">老师</option>
           <option value="admin">管理员</option>
         </select>
+
+        <FormModal :is-edit="false" :role="role" :modal-title="role=='student'?'学员注册': '讲师注册'">
+        </FormModal>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import request from "@/common/request";
+import FormModal from '@/components/modal/UserFormModal'
 
 export default {
   name: "Login",
+  components:{
+    FormModal
+  },
   data() {
     return {
-      username: "",
-      password: "",
-      role: "user",
-      showTip1: false,
-      showTip2: false,
+      form: {},
+      role: 'student',
+      show: true
     }
   },
   methods: {
-    async login() {
-      let username = this.username;
-      let password = this.password;
-      if (!username) {
-        this.showTip1 = true;
-        return;
-      } else if (!password) {
-        this.showTip2 = true;
-        return;
-      }
-
+    async login(event) {
+      event.preventDefault();
       //请求数据
-      let reqData = await request.post(`http://localhost:8888/${this.role}/login?`, {username, password});
-      // this.isLogin = reqData.success;
-      // this.loginMsg = reqData.message;
-      // setTimeout(() => {this.loginMsg = ""},1500);
+      let reqData = await this.$http.post(`${this.role}/login`, this.form);
       if (reqData.success) {
-        this.$alert.success(reqData.message);
-        // this.$alert.loginMsg = reqData.message;
         window.sessionStorage.setItem("token", reqData.result.token);
-        this.$router.push('/home');
-      } else {
-        this.$alert.danger(reqData.message);
+        setTimeout(()=>{
+          this.$router.push('/home');
+        }, 1500);
       }
+      this.$bvToast.toast(reqData.message, {
+        variant: reqData.success?"success":"danger",
+        solid: true,
+        toaster: "b-toaster-top-center",
+        autoHideDelay: 1500
+      })
     },
-    async getData() {
-      let reqData = await request.get(`http://localhost:8888/user`);
-      console.log(reqData);
+    resetForm() {
+      this.form = {};
     }
   }
 }
@@ -110,35 +118,21 @@ export default {
   border-radius: 50%;
 }
 
-.input-content {
+.form-content {
   height: 200px;
+  font-size: 14px;
+  transform: translateY(-50px);
 }
 
-.input-content input {
+.form-content input {
   height: 40px;
-  outline: none;
-  border-radius: 20px;
-  color: #999;
   text-indent: 15px;
-  border: 1px solid #e4eaee;
-}
-
-.input-content input.tip {
-  border-color: #f00000;
-}
-
-.input-content .confirm-btn {
-  color: #ffffff;
-  background-color: #ff0000;
   border-radius: 20px;
-  border: 1px solid #e4eaee;
-  text-align: center;
-  line-height: 40px;
-  cursor: pointer;
 }
 
-.input-content .confirm-btn:hover {
-  background-color: #f00000;
+.login-btn{
+  background-color: #ff0000;
+  border: none;
 }
 
 .go-register {
