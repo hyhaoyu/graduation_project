@@ -8,19 +8,16 @@
       <b-breadcrumb-item active>学员课程</b-breadcrumb-item>
     </b-breadcrumb>
 
-    <div class="d-flex justify-content-between">
-      <b-input-group class="student-name mb-2">
-        <b-input :placeholder="`学员:${$route.params.name}`"
-                 class="form-control" disabled>
-        </b-input>
-      </b-input-group>
-      <b-button variant="success" size="sm"
-                v-b-modal.chooseCourse>
-        添加课程
-      </b-button>
-    </div>
     <!--课程列表-->
     <b-card class="course-list mb-2">
+      <div class="d-flex justify-content-between">
+        <b-input-group class="student-name mb-2">
+          <b-input :placeholder="`学员:${$route.params.name}`"
+                   class="form-control" disabled>
+          </b-input>
+        </b-input-group>
+      </div>
+
       <!--课程信息展示区域-->
       <b-table id="course-table" :per-page="pageSize"
                :current-page="pageNum" :items="courseList"
@@ -68,7 +65,7 @@
                 autocomplete="off">
           <b-form-group label="课程成绩" label-for="input-1"
                         invalid-feedback="课程成绩大于等于0小于等于100">
-            <b-form-input id="input-1" type="number" ref="name" v-model="grade"
+            <b-form-input id="input-1" type="number" v-model="grade"
                           :state="gradeState" required>
             </b-form-input>
           </b-form-group>
@@ -81,14 +78,6 @@
 <script>
 export default {
   name: 'StudentCourse',
-  props:{
-    role: {
-      type: String,
-      default() {
-        return ''
-      }
-    }
-  },
   computed:{
     gradeState(){
       return this.grade >= 0 && this.grade <= 100;
@@ -152,7 +141,7 @@ export default {
       }
     },
     async toggleCourseList(){
-      let reqData = await this.$http.get(`${this.role}/${this.studentId}?pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
+      let reqData = await this.$http.get(`/studentCourse/${this.studentId}?pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
       if(reqData.success){
         if(this.rows != reqData.result.total){
           this.updateCourseList();
@@ -171,7 +160,7 @@ export default {
       this.isBusy = !this.isBusy;
       this.courseList = [];
       this.pageNum = 1;
-      let reqData = await this.$http.get(`studentCourse/${this.studentId}?pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
+      let reqData = await this.$http.get(`/studentCourse/${this.studentId}?pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
       this.isBusy = !this.isBusy;
       if(reqData.result){
         this.rows = reqData.result.total;
@@ -195,7 +184,7 @@ export default {
     },
     async handleSubmit(){
       if(!this.gradeState){return;}
-      let reqData = await this.$http.put('studentCourse', {id: this.studentCourseId, grade: this.grade});
+      let reqData = await this.$http.put('/studentCourse', {id: this.studentCourseId, grade: this.grade});
       this.$toast(reqData.success, reqData.message);
       //刷新
       this.updateCourseList();
@@ -210,7 +199,7 @@ export default {
       this.deleteId=id;
     },
     async deleteStudentCourse(){
-      let reqData = await this.$http.delete(`studentCourse/${this.deleteId}`);
+      let reqData = await this.$http.delete(`/studentCourse/${this.deleteId}`);
       this.$toast(reqData.success, reqData.message);
       this.updateCourseList();
     }

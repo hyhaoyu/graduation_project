@@ -28,15 +28,15 @@
             登录
           </b-button>
           <div class="go-register" align="center">
-            <span class="" v-b-modal.modal v-show="role != 'admin'">没账号？去注册</span>
+            <span class="" v-b-modal.userFormModal v-show="role != 'admin'">没账号？去注册</span>
             <span class="float-right" @click="resetForm">重置</span>
           </div>
         </b-form>
-        <select class="select-btn" v-model="role">
-          <option value="student">学生</option>
-          <option value="teacher">老师</option>
-          <option value="admin">管理员</option>
-        </select>
+        <b-form-select class="select-btn" v-model="role">
+          <b-form-select-option value="student">学生</b-form-select-option>
+          <b-form-select-option value="teacher">老师</b-form-select-option>
+          <b-form-select-option value="admin">管理员</b-form-select-option>
+        </b-form-select>
 
         <FormModal :is-edit="false" :role="role" :modal-title="role=='student'?'学员注册': '讲师注册'">
         </FormModal>
@@ -64,7 +64,7 @@ export default {
     async login(event) {
       event.preventDefault();
       //请求数据
-      let reqData = await this.$http.post(`${this.role}/login`, this.form);
+      let reqData = await this.$http.post(`/${this.role}/login`, this.form);
       if (reqData.success) {
         window.sessionStorage.setItem("token", reqData.result.token);
         setTimeout(()=>{
@@ -146,5 +146,6 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+  width: 90px;
 }
 </style>

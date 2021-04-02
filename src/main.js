@@ -8,8 +8,12 @@ import './assets/css/global.css'
 //导入bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+//后台服务器域名端口
+Vue.prototype.$host = "http://localhost:8888";
+
+//数据请求函数
 import request from '@/common/request'
-request.baseUrl = "http://localhost:8888/";
+request.baseUrl = "http://localhost:8888";
 Vue.prototype.$http = request;
 
 import showToast from '@/common/showToast'

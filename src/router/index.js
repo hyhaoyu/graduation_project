@@ -6,6 +6,9 @@ import Welcome from '@/components/home/Welcome'
 import Student from '@/components/student/Student'
 import Teacher from '@/components/teacher/Teacher'
 import StudentCourse from '@/components/student/StudentCourse'
+import Course from '@/components/course/Course'
+import TeacherCourse from '@/components/teacher/TeacherCourse'
+import CourseStudent from '@/components/course/CourseStudent'
 
 Vue.use(VueRouter)
 
@@ -33,12 +36,26 @@ const routes = [
         component: StudentCourse
       },
       {
+        name: 'teacher_course',
+        path: '/teacher_course/:id/:name',
+        component: TeacherCourse
+      },
+      {
         path: '/student',
         component: Student
       },
       {
         path: '/teacher',
         component: Teacher
+      },
+      {
+        path: '/course',
+        component: Course
+      },
+      {
+        name: 'course_student',
+        path: '/course_student/:id/:name',
+        component: CourseStudent
       }
     ]
   }

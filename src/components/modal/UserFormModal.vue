@@ -1,8 +1,15 @@
 <template>
-  <b-modal id="modal" ref="modal" :title="modalTitle" scrollable
+  <b-modal id="userFormModal" ref="modal" :title="modalTitle" scrollable
            @show="resetModal" @hidden="resetModal" @ok="userHandler">
     <b-form ref="form" @submit.stop.prevent="handleSubmit"
             autocomplete="off">
+      <b-form-group label="头像" label-for="input-0" v-show="isEdit">
+        <b-img thumbnail width="100" height="100" :src="avatarUrl" alt="头像"></b-img>
+        <b-form-file accept=".jpg, .png, .gif"
+                     placeholder="选择图片"
+                     drop-placeholder="松开鼠标"
+                     v-model="avatar" @input="uploadImg"></b-form-file>
+      </b-form-group>
       <b-form-group label="用户名" label-for="input-1"
                     invalid-feedback="用户名不能为空" :state="nameState">
         <b-form-input ref="name" id="input-1" v-model="form.username"
@@ -73,6 +80,9 @@ export default {
     }
   },
   computed:{
+    avatarUrl(){
+      return this.form.avatarUrl? this.$host+this.form.avatarUrl: require('../../assets/images/avatar.jpg');
+    },
     genderState(){
       return this.init == true? null: this.form.gender == 0 || this.form.gender == 1;
     },
@@ -86,10 +96,26 @@ export default {
       phoneReg: /^1(3|4|5|6|7|8|9)\d{9}$/,
       nameState: null,
       pswState: null,
+      avatar: null
     }
   },
   methods:{
-    //修改注册学生信息
+    //上传图片
+    async uploadImg(){
+      if(this.avatar){
+        let reqData = await this.$http.uploadFile(`/${this.role}/avatar`,{id: this.form.id, file: this.avatar});
+        this.$toast(reqData.success, reqData.message);
+        if(reqData.success){
+          this.form.avatarUrl = reqData.result.picUrl;
+          this.$emit('updateUserList');
+        }
+        else{
+          this.avatar = null;
+        }
+      }
+    },
+
+    //修改注册用户信息
     userHandler(bvModalEvt) {
       bvModalEvt.preventDefault();
       this.init = false;
@@ -99,19 +125,18 @@ export default {
       if (!this.checkFormValidity()) {
         return
       }
-      let reqData
+      let reqData;
       if(!this.isEdit){
-        reqData = await this.$http.post(`${this.role}/register`, this.form);
+        reqData = await this.$http.post(`/${this.role}/register`, this.form);
       }
       else{
-        reqData = await this.$http.put(`${this.role}`, this.form);
+        reqData = await this.$http.put(`/${this.role}`, this.form);
       }
       //刷新
-      this.$emit('updateUserList')
+      this.$emit('updateUserList');
       this.$toast(reqData.success, reqData.message);
-
       this.$nextTick(() => {
-        this.$bvModal.hide('modal')
+        this.$bvModal.hide('userFormModal')
       })
     },
     checkFormValidity() {

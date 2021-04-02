@@ -13,7 +13,7 @@
         </b-input-group-append>
       </b-input-group>
       <b-button variant="success" size="sm"
-                v-b-modal.modal @click="setModalName(false)">
+                v-b-modal.userFormModal @click="setModalName(false)">
         添加用户
       </b-button>
     </div>
@@ -45,7 +45,7 @@
         </b-button>
         <b-button pill variant="outline-warning" size="sm"
                   v-b-tooltip.hover title="修改信息"
-                  v-b-modal.modal @click="setModalName(true, data.item)">
+                  v-b-modal.userFormModal @click="setModalName(true, data.item)">
           修改
         </b-button>
         <b-button pill variant="outline-danger" size="sm"
@@ -61,8 +61,8 @@
                   @input="pageNumChange" align="center">
     </b-pagination>
     <!--用户信息 对话框-->
-    <UserFormModal :is-edit="isEdit" :modal-title="modalTitle" :form="form" :role="role"
-               @updateUserList="updateUserList"></UserFormModal>
+    <user-form-modal :is-edit="isEdit" :modal-title="modalTitle" :form="form" :role="role"
+               @updateUserList="updateUserList"></user-form-modal>
 
     <b-modal id="delete" @ok="deleteUser">
       是否删除该用户
@@ -83,6 +83,16 @@ export default {
       type: String,
       default() {
         return ''
+      }
+    }
+  },
+  computed:{
+    courseId(){
+      if(this.$route.params.id){
+        return this.$route.params.id;
+      }
+      else{
+        return "";
       }
     }
   },
@@ -150,7 +160,7 @@ export default {
       }
     },
     async toggleUserList(){
-      let reqData = await this.$http.get(`${this.role}?name=${this.queryName}&&pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
+      let reqData = await this.$http.get(`/${this.role}?name=${this.queryName}&&courseId=${this.courseId}&&pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
       if(reqData.success){
         if(this.rows != reqData.result.total){
           this.updateUserList();
@@ -169,7 +179,7 @@ export default {
       this.isBusy = !this.isBusy;
       this.userList = [];
       this.pageNum = 1;
-      let reqData = await this.$http.get(`${this.role}?name=${this.queryName}&&pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
+      let reqData = await this.$http.get(`/${this.role}?name=${this.queryName}&&courseId=${this.courseId}&&pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
       this.isBusy = !this.isBusy;
       if(reqData.result){
         this.rows = reqData.result.total;
@@ -184,7 +194,6 @@ export default {
     // 切换modal
     setModalName(isEdit, form = {}){
       this.form = {...form};
-      this.form.registrationDate=this.$moment(this.form.registrationDate).format('YYYY-MM-DD HH:mm:ss');
       this.isEdit = isEdit;
       this.modalTitle = isEdit?'修改用户信息':'用户注册';
     },
@@ -193,7 +202,7 @@ export default {
       this.deleteId=id;
     },
     async deleteUser(){
-      let reqData = await this.$http.delete(`${this.role}/${this.deleteId}`);
+      let reqData = await this.$http.delete(`/${this.role}/${this.deleteId}`);
 
       this.$toast(reqData.success, reqData.message);
       this.updateUserList();
