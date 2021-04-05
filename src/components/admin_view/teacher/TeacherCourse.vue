@@ -14,7 +14,7 @@
 
 
 <script>
-import CourseList from '@/components/dataList/CourseList'
+import CourseList from '@/components/admin_view/dataList/CourseList'
 export default {
 name: "TeacherCourse",
   components: { CourseList }

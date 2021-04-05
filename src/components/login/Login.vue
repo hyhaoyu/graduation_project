@@ -68,15 +68,10 @@ export default {
       if (reqData.success) {
         window.sessionStorage.setItem("token", reqData.result.token);
         setTimeout(()=>{
-          this.$router.push('/home');
+          this.$router.push(`/${this.role}_home`);
         }, 1500);
       }
-      this.$bvToast.toast(reqData.message, {
-        variant: reqData.success?"success":"danger",
-        solid: true,
-        toaster: "b-toaster-top-center",
-        autoHideDelay: 1500
-      })
+      this.$toast(reqData.success, reqData.message);
     },
     resetForm() {
       this.form = {};

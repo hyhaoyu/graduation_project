@@ -3,26 +3,31 @@ import VueRouter from 'vue-router'
 import Login from '@/components/login/Login'
 import AHome from '@/components/home/AHome'
 import Welcome from '@/components/home/Welcome'
-import Student from '@/components/student/Student'
-import Teacher from '@/components/teacher/Teacher'
-import StudentCourse from '@/components/student/StudentCourse'
-import Course from '@/components/course/Course'
-import TeacherCourse from '@/components/teacher/TeacherCourse'
-import CourseStudent from '@/components/course/CourseStudent'
+import Student from '@/components/admin_view/student/Student'
+import Teacher from '@/components/admin_view/teacher/Teacher'
+import StudentCourse from '@/components/admin_view/student/StudentCourse'
+import Course from '@/components/admin_view/course/Course'
+import TeacherCourse from '@/components/admin_view/teacher/TeacherCourse'
+import CourseStudent from '@/components/admin_view/course/CourseStudent'
+import SHome from '@/components/home/SHome'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    redirect: '/home'
   },
   {
     path: '/login',
     component: Login
   },
   {
-    path: '/home',
+    path: '/student_home',
+    component: SHome
+  },
+  {
+    path: '/admin_home',
     component: AHome,
     redirect: '/welcome',
     children:[

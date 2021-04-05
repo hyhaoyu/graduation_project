@@ -1,13 +1,12 @@
 <template>
   <div class="d-flex flex-column h-100">
-    <b-nav class="nav-ctn d-flex justify-content-between">
-      <b-nav-text  active class="text">
-        管理员界面
-      </b-nav-text>
-      <b-nav-item>
+    <b-navbar toggleable="lg" type="dark" variant="success"
+              class= "d-flex justify-content-between">
+      <b-navbar-brand href="#">管理员界面</b-navbar-brand>
+      <b-navbar-nav>
         <b-button @click="logout">退出</b-button>
-      </b-nav-item>
-    </b-nav>
+      </b-navbar-nav>
+    </b-navbar>
     <div class="flex-grow-1 d-flex">
       <b-nav vertical class="sidebar">
         <b-nav-item v-b-toggle.collapse1 class="menu">
@@ -65,14 +64,6 @@ export default {
 </script>
 
 <style scoped>
-  .nav-ctn{
-    background-color: #85b675;
-  }
-  .navbar-text.text{
-    margin:0 10px;
-    font-size: 16px;
-    line-height: 200%;
-  }
   .sidebar{
     width: 200px;
     height: 100%;

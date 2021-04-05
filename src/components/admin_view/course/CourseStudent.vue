@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import UserList from '@/components/dataList/UserList'
+import UserList from '@/components/admin_view/dataList/UserList'
 export default {
 name: "CourseStudent",
   components: { UserList }
