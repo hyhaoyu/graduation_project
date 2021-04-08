@@ -10,6 +10,8 @@ import Course from '@/components/admin_view/course/Course'
 import TeacherCourse from '@/components/admin_view/teacher/TeacherCourse'
 import CourseStudent from '@/components/admin_view/course/CourseStudent'
 import SHome from '@/components/home/SHome'
+import AllCourse from '@/components/student_view/AllCourse'
+import MyCourse from '@/components/student_view/MyCourse'
 
 Vue.use(VueRouter)
 
@@ -24,7 +26,20 @@ const routes = [
   },
   {
     path: '/student_home',
-    component: SHome
+    component: SHome,
+    redirect: '/allCourse',
+    children: [
+      {
+        name: 'allCourse',
+        path: '/allCourse/:courseName?',
+        component: AllCourse
+      },
+      {
+        name: 'myCourse',
+        path: '/myCourse/:courseName?',
+        component: MyCourse
+      },
+    ]
   },
   {
     path: '/admin_home',

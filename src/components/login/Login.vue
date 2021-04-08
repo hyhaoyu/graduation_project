@@ -67,6 +67,7 @@ export default {
       let reqData = await this.$http.post(`/${this.role}/login`, this.form);
       if (reqData.success) {
         window.sessionStorage.setItem("token", reqData.result.token);
+        window.sessionStorage.setItem("user", JSON.stringify(reqData.result));
         setTimeout(()=>{
           this.$router.push(`/${this.role}_home`);
         }, 1500);
