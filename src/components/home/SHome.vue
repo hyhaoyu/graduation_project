@@ -9,7 +9,7 @@
         <b-navbar-nav>
           <b-nav-item href="#" :to="{name:'allCourse'}">首页</b-nav-item>
           <b-nav-item href="#" :to="{name:'myCourse'}">我的课程</b-nav-item>
-          <b-nav-item href="#">机构讲师</b-nav-item>
+          <b-nav-item href="#" :to="{name:'allTeacher'}">机构讲师</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -17,7 +17,7 @@
           <b-nav-form>
             <b-form-input size="sm" class="mr-sm-2" placeholder="输入课程名" v-model="courseName"></b-form-input>
             <b-button size="sm" class="my-2 my-sm-0" type="submit"
-                      :to="{name:'allCourse', params:{courseName}}">搜索</b-button>
+                      :to="{name:'allCourse', query:{courseName}}">搜索</b-button>
           </b-nav-form>
 
           <b-nav-item-dropdown right>

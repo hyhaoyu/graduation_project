@@ -3,9 +3,8 @@
     <b-card-group class="mx-auto w-75 flex-wrap" deck>
       <b-card class="course flex-grow-0 mt-5"
               v-for="course in courseList" :key="course.id"
-              :img-src="getPicUrl(course)"
-              img-height="200"
-              img-alt="课程图片" img-top>
+              :img-src="getPicUrl(course)" img-height="200" img-alt="课程图片" img-top
+              @click="toCourseDetail(course)">
         <b-card-title>
           {{ course.courseName }}
         </b-card-title>
@@ -39,6 +38,11 @@
 <script>
 export default {
   name: "CourseList",
+  computed: {
+    courseName(){
+      return this.$route.query.courseName || ""
+    }
+  },
   props: {
     isMyCourse: {
       type: Boolean,
@@ -49,7 +53,6 @@ export default {
   },
   data(){
     return{
-      courseName: this.$route.params.courseName || '',
       teacherId: "",
       pageNum: 1,
       pageSize: 4,
@@ -71,19 +74,26 @@ export default {
       else{
         reqData = await this.$http.get(`/course?name=${this.courseName}&&teacherId=${this.teacherId}&&pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
       }
-      let courseList = reqData.result.courseList;
-      this.courseTotal = reqData.result.total;
-      this.courseList.push(...courseList);
-      if(this.pageNum*this.pageSize >= this.courseTotal){
-        this.moreShowBoolean = false;
-      }
-      else{
-        this.moreShowBoolean = true;
+
+      if(reqData.success){
+        let courseList = reqData.result.courseList;
+        this.courseTotal = reqData.result.total;
+        this.courseList.push(...courseList);
+        if(this.pageNum*this.pageSize >= this.courseTotal){
+          this.moreShowBoolean = false;
+        }
+        else{
+          this.moreShowBoolean = true;
+        }
       }
     },
     getMoreCourse(){
       this.pageNum++;
       this.getCourseList();
+    },
+    toCourseDetail(course){
+      let courseId = this.isMyCourse?course.courseId: course.id;
+      this.$router.push({ name: 'courseDetail', params: { courseId } });
     }
   },
   created() {
