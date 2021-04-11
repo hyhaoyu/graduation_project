@@ -60,34 +60,21 @@
       </b-modal>
 
       <!--修改课程成绩-->
-      <b-modal id="gradeModal" ref="modal" title="课程成绩" @ok="gradeCourse">
-        <b-form ref="form" @submit.stop.prevent="handleSubmit"
-                autocomplete="off">
-          <b-form-group label="课程成绩" label-for="input-1"
-                        invalid-feedback="课程成绩大于等于0小于等于100">
-            <b-form-input id="input-1" type="number" v-model="grade"
-                          :state="gradeState" required>
-            </b-form-input>
-          </b-form-group>
-        </b-form>
-      </b-modal>
+      <grade-modal @updateCourseList="updateCourseList"
+                   :studentCourse="studentCourse"></grade-modal>
     </b-card>
   </div>
 </template>
 
 <script>
+import GradeModal from '@/components/modal/GradeModal'
 export default {
   name: 'StudentCourse',
-  computed:{
-    gradeState(){
-      return this.grade >= 0 && this.grade <= 100;
-    }
-  },
+  components: { GradeModal },
   data() {
     return {
       studentId: '',
-      studentCourseId: '',
-      grade: 0,
+      studentCourse: {},
       rows: 0,
       pageNum: 1,
       pageSize: 3,
@@ -173,25 +160,7 @@ export default {
 
     //设置当前选中课程的信息
     setCourseGrade(data){
-      this.studentCourseId = data.id;
-      this.grade = data.grade;
-    },
-
-    //设置学生课程成绩
-    gradeCourse(bvModalEvt){
-      bvModalEvt.preventDefault();
-      this.handleSubmit();
-    },
-    async handleSubmit(){
-      if(!this.gradeState){return;}
-      let reqData = await this.$http.put('/studentCourse', {id: this.studentCourseId, grade: this.grade});
-      this.$toast(reqData.success, reqData.message);
-      //刷新
-      this.updateCourseList();
-      //关闭交互框
-      this.$nextTick(() => {
-        this.$bvModal.hide('gradeModal');
-      })
+      this.studentCourse = {id: data.id, grade: data.grade };
     },
 
     //课程退选

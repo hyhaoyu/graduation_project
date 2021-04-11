@@ -1,8 +1,21 @@
 <template>
   <div class="con mx-auto w-75">
+    <b-breadcrumb>
+      <b-breadcrumb-item active>首页</b-breadcrumb-item>
+      <b-breadcrumb-item active>所有讲师</b-breadcrumb-item>
+    </b-breadcrumb>
+
+    <b-input-group>
+      <b-input placeholder="输入讲师名"
+               v-model="queryName">
+      </b-input>
+      <b-input-group-append>
+        <b-button @click="searchTeacher" variant="success">搜索</b-button>
+      </b-input-group-append>
+    </b-input-group>
     <b-card class="mt-2"
             v-for="teacher in teacherList" :key="teacher.id"
-            :img-src="getPicUrl(teacher)" img-width="150" img-alt="头像" img-left
+            :img-src="getPicUrl(teacher)" img-height="150" img-alt="头像" img-left
             @click="toTeacherDetail(teacher.id)">
       <b-card-title>
         {{ teacher.realName }}
@@ -33,11 +46,12 @@ export default {
   name: "AllTeacher",
   data(){
     return{
+      queryName: "",
       pageNum: 1,
       pageSize: 4,
       teacherTotal: 0,
       teacherList: [],
-      moreShowBoolean: true,
+      moreShowBoolean: false,
     }
   },
   methods: {
@@ -48,7 +62,7 @@ export default {
       return teacher.gender? "男":"女";
     },
     async getTeacherList(){
-      let reqData = await this.$http.get(`/teacher?pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
+      let reqData = await this.$http.get(`/teacher?name=${this.queryName}&&pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
 
       if(reqData.success){
         let teacherList = reqData.result.userList;
@@ -66,8 +80,13 @@ export default {
       this.pageNum++;
       this.getTeacherList();
     },
+    searchTeacher(){
+      this.pageNum = 1;
+      this.teacherList = [];
+      this.getTeacherList();
+    },
     toTeacherDetail(teacherId){
-      this.$router.push({ name: 'courseDetail', params: { teacherId } });
+      this.$router.push({ name: 'teacherDetail', params: { teacherId } });
     }
   },
   created() {

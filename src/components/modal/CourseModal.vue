@@ -102,7 +102,7 @@ export default {
         reqData = await this.$http.put("/course", this.form);
       }
       //刷新
-      this.$emit('updateCourseList')
+      reqData.success && this.$emit('updateCourseList')
       this.$toast(reqData.success, reqData.message);
       this.$nextTick(() => {
         this.$bvModal.hide('courseModal')

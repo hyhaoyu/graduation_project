@@ -14,6 +14,10 @@ import AllCourse from '@/components/student_view/AllCourse'
 import MyCourse from '@/components/student_view/MyCourse'
 import CourseDetail from '@/components/student_view/CourseDetail'
 import AllTeacher from '@/components/student_view/AllTeacher'
+import TeacherDetail from '@/components/student_view/TeacherDetail'
+import THome from '@/components/home/THome'
+import MyTeachingCourse from '@/components/teacher_view/MyTeachingCourse'
+import TeachingCourseDetail from '@/components/teacher_view/TeachingCourseDetail'
 
 Vue.use(VueRouter)
 
@@ -27,9 +31,34 @@ const routes = [
     component: Login
   },
   {
+    path: '/teacher_home',
+    component: THome,
+    redirect: '/hello',
+    children: [
+      {
+        name: 'hello',
+        path: '/hello',
+        component: Welcome
+      },
+      {
+        name: "myTeachingCourse",
+        path: "/myTeachingCourse",
+        component: MyTeachingCourse
+      },
+      {
+        name: 'teachingCourseDetail',
+        path: '/teachingCourse_detail/:courseId',
+        component: TeachingCourseDetail,
+        props: route => {
+          return {courseId: route.params.courseId};
+        }
+      }
+    ]
+  },
+  {
     path: '/student_home',
     component: SHome,
-    redirect: 'allCourse',
+    redirect: '/allCourse',
     children: [
       {
         name: 'allCourse',
@@ -52,6 +81,14 @@ const routes = [
         component: CourseDetail,
         props: route => {
           return {courseId: route.params.courseId};
+        }
+      },
+      {
+        name: 'teacherDetail',
+        path: '/teacher_detail/:teacherId',
+        component: TeacherDetail,
+        props: route => {
+          return {teacherId: route.params.teacherId};
         }
       }
     ]

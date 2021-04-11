@@ -1,27 +1,27 @@
 <template>
-  <div class="con">
-    <b-card-group class="flex-wrap" deck>
-      <b-card class="course flex-grow-0 mt-5"
-              v-for="course in courseList" :key="course.id"
-              :img-src="getPicUrl(course)" img-height="200" img-alt="课程图片" img-top
-              @click="toCourseDetail(course)">
-        <b-card-title>
-          {{ course.courseName }}
-        </b-card-title>
-        <b-card-text>
-          时长：{{ course.duration}}
-        </b-card-text>
-        <b-card-text class="small text-muted">
-          在学人数：{{ course.headcount }}
-        </b-card-text>
-        <b-card-text class="small text-muted">
-          上架时间：{{ $moment(course.addDate).format('YYYY-MM-DD') }}
-        </b-card-text>
-        <template #footer>
-          <small class="text-muted">讲师：{{ course.teacherName }}</small>
-        </template>
-      </b-card>
-    </b-card-group>
+  <div class="mx-auto w-75">
+    <b-button class="w-100" variant="warning" v-show="!courseName"
+              v-b-modal.courseModal>上传新课程</b-button>
+    <b-card class="course flex-grow-0 mt-2"
+            v-for="course in courseList" :key="course.id"
+            :img-src="getPicUrl(course)" img-height="150" img-alt="课程图片" img-left
+            @click="toCourseDetail(course.id)">
+      <b-card-title>
+        {{ course.courseName }}
+      </b-card-title>
+      <b-card-text>
+        时长：{{ course.duration}}
+      </b-card-text>
+      <b-card-text class="small text-muted">
+        在学人数：{{ course.headcount }}
+      </b-card-text>
+      <b-card-text class="small text-muted">
+        上架时间：{{ $moment(course.addDate).format('YYYY-MM-DD') }}
+      </b-card-text>
+      <template #footer>
+        <small class="text-muted">讲师：{{ course.teacherName }}</small>
+      </template>
+    </b-card>
     <div class="mt-3">
       <b-button class="w-100" variant="info" @click="getMoreCourse"
                 v-if="moreShowBoolean">
@@ -32,29 +32,20 @@
         已到底部啦！
       </b-button>
     </div>
+
+    <!--课程弹窗-->
+    <course-modal :is-edit="false" modal-title="上传新课程" @updateCourseList="getNewCourse"></course-modal>
   </div>
 </template>
 
 <script>
+import CourseModal from '@/components/modal/CourseModal'
 export default {
-  name: "CourseList",
+  name: "MyTeachingCourse",
+  components: { CourseModal },
   computed: {
     courseName(){
       return this.$route.query.courseName || ""
-    }
-  },
-  props: {
-    isMyCourse: {
-      type: Boolean,
-      default() {
-        return false;
-      }
-    },
-    teacherId: {
-      type: String,
-      default() {
-        return '';
-      }
     }
   },
   data(){
@@ -71,14 +62,8 @@ export default {
       return course.picUrl? this.$host+course.picUrl: require('../../assets/images/avatar.jpg');
     },
     async getCourseList(){
-      let reqData;
-      if(this.isMyCourse){
-        let userId = JSON.parse(window.sessionStorage.getItem('user')).id;
-        reqData = await this.$http.get(`/studentCourse/${userId}?pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
-      }
-      else{
-        reqData = await this.$http.get(`/course?name=${this.courseName}&&teacherId=${this.teacherId}&&pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
-      }
+      let teacherId = JSON.parse(window.sessionStorage.getItem('user')).id;
+      let reqData = await this.$http.get(`/course?name=${this.courseName}&&teacherId=${teacherId}&&pageNum=${this.pageNum}&&pageSize=${this.pageSize}`);
 
       if(reqData.success){
         let courseList = reqData.result.courseList;
@@ -92,13 +77,17 @@ export default {
         }
       }
     },
+    getNewCourse(){
+      this.pageNum = 1;
+      this.courseList = [];
+      this.getCourseList();
+    },
     getMoreCourse(){
       this.pageNum++;
       this.getCourseList();
     },
-    toCourseDetail(course){
-      let courseId = this.isMyCourse?course.courseId: course.id;
-      this.$router.push({ name: 'courseDetail', params: { courseId } });
+    toCourseDetail(courseId){
+      this.$router.push({ name: 'teachingCourseDetail', params: { courseId } });
     }
   },
   created() {
@@ -119,10 +108,5 @@ export default {
 </script>
 
 <style scoped>
-  .con{
-    font-size: 16px;
-  }
-  .course{
-    min-width: 200px;
-  }
+
 </style>

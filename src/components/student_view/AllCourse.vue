@@ -1,5 +1,7 @@
 <template>
-  <course-list></course-list>
+  <div class="mx-auto w-75">
+    <course-list></course-list>
+  </div>
 </template>
 
 <script>

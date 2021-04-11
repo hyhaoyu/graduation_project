@@ -1,5 +1,7 @@
 <template>
-  <course-list :isMyCourse="true"></course-list>
+  <div class="mx-auto w-75">
+    <course-list :isMyCourse="true"></course-list>
+  </div>
 </template>
 
 <script>

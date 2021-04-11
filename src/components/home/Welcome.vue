@@ -1,5 +1,5 @@
 <template>
-  <b-jumbotron class="h-100" header="培训机构管理系统" lead="管理员界面">
+  <b-jumbotron class="h-100" header="培训机构管理系统">
     <p>欢迎！</p>
     <p>For more information visit website</p>
     <b-button variant="success">More Info</b-button>
