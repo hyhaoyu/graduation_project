@@ -15,7 +15,7 @@
     </b-input-group>
     <b-card class="mt-2"
             v-for="teacher in teacherList" :key="teacher.id"
-            :img-src="getPicUrl(teacher)" img-height="150" img-alt="头像" img-left
+            :img-src="getPicUrl(teacher)" img-height="150" img-width="150" img-alt="头像" img-left
             @click="toTeacherDetail(teacher.id)">
       <b-card-title>
         {{ teacher.realName }}

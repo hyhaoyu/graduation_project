@@ -4,7 +4,7 @@
               v-b-modal.courseModal>上传新课程</b-button>
     <b-card class="course flex-grow-0 mt-2"
             v-for="course in courseList" :key="course.id"
-            :img-src="getPicUrl(course)" img-height="150" img-alt="课程图片" img-left
+            :img-src="getPicUrl(course)" img-width="150" img-height="150" img-alt="课程图片" img-left
             @click="toCourseDetail(course.id)">
       <b-card-title>
         {{ course.courseName }}

@@ -3,7 +3,7 @@
     <b-card-group class="flex-wrap" deck>
       <b-card class="course flex-grow-0 mt-5"
               v-for="course in courseList" :key="course.id"
-              :img-src="getPicUrl(course)" img-height="200" img-width="200" img-alt="课程图片" img-top
+              :img-src="getPicUrl(course)" img-width="200" img-height="200" img-alt="课程图片" img-top
               @click="toCourseDetail(course)">
         <b-card-title>
           {{ course.courseName }}
@@ -11,12 +11,6 @@
         <b-card-text>
           时长：{{ course.duration}}
         </b-card-text>
-<!--        <b-card-text class="small text-muted">-->
-<!--          在学人数：{{ course.headcount }}-->
-<!--        </b-card-text>-->
-<!--        <b-card-text class="small text-muted">-->
-<!--          上架时间：{{ $moment(course.addDate).format('YYYY-MM-DD') }}-->
-<!--        </b-card-text>-->
         <template #footer>
           <small class="text-muted">讲师：{{ course.teacherName }}</small>
         </template>

@@ -5,5 +5,7 @@
 </template>
 
 <style>
-
+  img{
+    object-fit: cover;
+  }
 </style>

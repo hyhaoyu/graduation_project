@@ -11,7 +11,7 @@
     <b-card-group class="" deck>
       <b-card class="mt-2 student-card"
               v-for="(student,index) in studentList" :key="student.id"
-              :img-src="getPicUrl(student)" img-height="150" img-alt="头像" img-left>
+              :img-src="getPicUrl(student)" img-width="150" img-height="150" img-alt="头像" img-left>
         <b-card-title>
           {{ student.realName }}
         </b-card-title>

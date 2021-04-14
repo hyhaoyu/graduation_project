@@ -6,7 +6,7 @@
     </b-breadcrumb>
 
     <b-card class="course flex-shrink-1 mt-5"
-            :img-src="getPicUrl(course)" img-height="300" img-alt="课程图片"
+            :img-src="getPicUrl(course)" img-width="300" img-height="300" img-alt="课程图片"
             img-left>
       <b-card-title>
         {{ course.courseName }}

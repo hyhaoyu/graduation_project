@@ -4,7 +4,7 @@
     <b-form ref="form" @submit.stop.prevent="handleSubmit"
             autocomplete="off">
       <b-form-group label="头像" label-for="input-0" v-show="isEdit">
-        <b-img thumbnail width="100" height="100" :src="avatarUrl" alt="头像"></b-img>
+        <b-img style="width: 100px; height: 100px" thumbnail :src="avatarUrl" alt="头像"></b-img>
         <b-form-file accept=".jpg, .png, .gif"
                      placeholder="选择图片"
                      drop-placeholder="松开鼠标"

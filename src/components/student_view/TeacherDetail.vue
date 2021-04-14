@@ -7,7 +7,7 @@
     </b-breadcrumb>
 
     <b-card class="mt-2"
-            :img-src="getPicUrl(teacher)" img-height="150" img-alt="头像" img-left>
+            :img-src="getPicUrl(teacher)" img-width="150" img-height="150" img-alt="头像" img-left>
       <b-card-title>
         {{ teacher.realName }}
       </b-card-title>
