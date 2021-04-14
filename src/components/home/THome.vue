@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="d-flex flex-column h-100">
     <b-navbar toggleable="lg" type="dark" variant="info">
       <b-navbar-brand href="#">培训机构</b-navbar-brand>
 
@@ -21,7 +21,7 @@
 
           <b-nav-item-dropdown right>
             <template #button-content>
-              <em>我的</em>
+              <b-avatar :src="avatarUrl"></b-avatar>
             </template>
             <b-dropdown-item href="#" v-b-modal.userFormModal @click="getUserForm">个人信息</b-dropdown-item>
             <b-dropdown-item href="#" @click="logout">退出登录</b-dropdown-item>
@@ -29,12 +29,12 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <div class="min-vh-100">
+    <div class="flex-grow-1">
       <router-view :key="$route.fullPath"></router-view>
     </div>
 
     <user-form-modal :is-edit="true" modal-title="我的信息"
-                     :form="form" role="student"
+                     :form="form" role="teacher"
                      @updateUserList="updateUserList">
     </user-form-modal>
   </div>
@@ -45,6 +45,11 @@ import UserFormModal from '@/components/modal/UserFormModal'
 export default {
   name: "THome",
   components: { UserFormModal },
+  computed: {
+    avatarUrl(){
+      return this.form.avatarUrl? this.$host+this.form.avatarUrl: require('../../assets/images/avatar.jpg');
+    }
+  },
   data(){
     return{
       courseName: '',
@@ -62,6 +67,9 @@ export default {
     getUserForm(){
       this.form = JSON.parse(window.sessionStorage.getItem('user'));
     }
+  },
+  created() {
+    this.getUserForm();
   }
 }
 </script>
