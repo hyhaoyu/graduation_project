@@ -62,6 +62,7 @@ export default {
   },
   data(){
     return{
+      studentId: "",
       course: {},
       teacherName: "",
       isMyCourse: false,
@@ -88,12 +89,15 @@ export default {
       await this.getCourseDetail();
     },
     async takeCourse(){
-      let reqData = await this.$http.post(`/studentCourse?id=${this.courseId}`);
+      let userId = this.studentId;
+      let courseId = this.courseId;
+      let reqData = await this.$http.post('/studentCourse', {userId, courseId});
       this.$toast(reqData.success, reqData.message);
       await this.getCourseDetail();
     }
   },
   created() {
+    this.studentId = JSON.parse(window.sessionStorage.getItem('user')).id;
     this.getCourseDetail();
   }
 }
